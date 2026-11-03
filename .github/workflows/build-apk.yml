@@ -2,6 +2,8 @@ name: Build APK
 on:
   push:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,3 +19,11 @@ jobs:
         with:
           name: PixelOrganiser-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish APK as a release (direct phone download)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk PixelOrganiser.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest PixelOrganiser.apk --title "Pixel Organiser (latest build)" --notes "Debug build from ${GITHUB_SHA::7}" --target "$GITHUB_SHA"
