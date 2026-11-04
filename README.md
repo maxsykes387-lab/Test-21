@@ -1,12 +1,17 @@
 # Organiser for Pixel
 
-A Material You app that sorts every app on your Pixel into tidy categories.
+A home screen for your Pixel. It keeps your wallpaper and sorts every app into tidy category rows on top of it. The look blends the Pixel (Material You colours, Google search bar) with the iPhone (rounded-square icons, frosted rows, a dock).
+
+No ads, no tracking, and no internet permission. Every app, including Google Wallet, opens normally.
+
+## Make it your home screen
+After installing: Settings > Apps > Default apps > Home app > Organiser. To go back, choose Pixel Launcher in the same place.
 
 ## What it does
 - Finds every launchable app and sorts it into 13 categories (Social, Messages & Calls, Productivity, Watch & Listen, Games, Photos & Camera, Shopping & Money, Maps & Travel, News & Reading, Health & Fitness, Tools, Google & System, Other).
 - Sorting uses, in order: a built-in list of ~100 popular app package names, the category the developer declared to Android, then keyword rules on the app name.
 - Long-press any app to move it to another category. Your choice is saved.
-- Search bar and filter chips across the top. Tap an app to open it.
+- Each category is a row that scrolls sideways. A dock holds Phone, Messages, Wallet, Chrome and Camera, with a search bar below it. Tap an app to open it.
 - Colours follow your wallpaper (Material You dynamic colour, Android 12+), with light and dark mode.
 - Re-sorts automatically when you install or uninstall an app.
 

@@ -13,7 +13,7 @@ enum class Category(val label: String, val icon: ImageVector, val accent: Color)
     ENTERTAINMENT("Watch & Listen", Icons.Rounded.PlayCircle, Color(0xFFB3261E)),
     GAMES("Games", Icons.Rounded.SportsEsports, Color(0xFF7D5260)),
     PHOTOS("Photos & Camera", Icons.Rounded.PhotoCamera, Color(0xFFC26401)),
-    SHOPPING("Shopping & Money", Icons.Rounded.ShoppingBag, Color(0xFF8E4585)),
+    SHOPPING("Wallet & Shopping", Icons.Rounded.ShoppingBag, Color(0xFF8E4585)),
     TRAVEL("Maps & Travel", Icons.Rounded.Map, Color(0xFF006A6A)),
     NEWS("News & Reading", Icons.Rounded.Newspaper, Color(0xFF5B5F97)),
     HEALTH("Health & Fitness", Icons.Rounded.FavoriteBorder, Color(0xFFBA1A1A)),

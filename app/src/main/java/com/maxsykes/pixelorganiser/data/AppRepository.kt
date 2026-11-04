@@ -4,6 +4,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.drawable.toBitmap
@@ -32,7 +36,7 @@ class AppRepository(private val context: Context) {
     /** Every launchable app on the phone, except this one. */
     suspend fun loadApps(): List<AppEntry> = withContext(Dispatchers.IO) {
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        val iconSizePx = (48 * context.resources.displayMetrics.density).toInt()
+        val iconSizePx = (60 * context.resources.displayMetrics.density).toInt()
 
         pm.queryIntentActivities(intent, 0)
             .filter { it.activityInfo.packageName != context.packageName }
@@ -43,12 +47,37 @@ class AppRepository(private val context: Context) {
                     label = label,
                     packageName = activity.packageName,
                     component = ComponentName(activity.packageName, activity.name),
-                    icon = info.loadIcon(pm).toBitmap(iconSizePx, iconSizePx).asImageBitmap(),
+                    icon = renderIcon(info.loadIcon(pm), iconSizePx).asImageBitmap(),
                     autoCategory = Categorizer.categorize(activity.packageName, label, activity.applicationInfo),
                 )
             }
             .distinctBy { it.component }
             .sortedBy { it.label.lowercase() }
+    }
+
+    /**
+     * Draws the icon full-bleed as a square, so the UI can give every app the same
+     * rounded-square shape (a Pixel and iPhone blend) instead of the system's circle.
+     */
+    private fun renderIcon(drawable: Drawable, size: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        if (drawable is AdaptiveIconDrawable) {
+            // Adaptive layers are 108dp with a 72dp visible area: draw them 1.5x and centred.
+            val pad = size / 4
+            listOfNotNull(drawable.background, drawable.foreground).forEach { layer ->
+                layer.setBounds(-pad, -pad, size + pad, size + pad)
+                layer.draw(canvas)
+            }
+        } else {
+            // Older square or odd-shaped icons sit on a soft white tile.
+            canvas.drawColor(android.graphics.Color.WHITE)
+            val inset = size / 7
+            drawable.toBitmap(size - inset * 2, size - inset * 2).let {
+                canvas.drawBitmap(it, inset.toFloat(), inset.toFloat(), null)
+            }
+        }
+        return bitmap
     }
 
     /** Categories the user picked by hand: packageName -> Category. */
